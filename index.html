@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل کنترل مزرعه هوشمند</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="gradient-bg font-sans min-h-screen" data-theme="light">
+    <!-- Language Toggle -->
+    <div class="lang-toggle" onclick="toggleLanguage()">
+        <span id="langIcon">🇮🇷</span>
+        <span id="langText">فارسی</span>
+    </div>
+
+    <!-- Theme Toggle -->
+    <div class="theme-toggle" onclick="toggleTheme()">
+        <span id="themeIcon">🌙</span>
+        <span id="themeText">تاریک</span>
+    </div>
+
+    <div class="container mx-auto p-4 max-w-7xl">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-5xl font-bold mb-3" id="mainTitle" style="color: var(--text-primary)">🚜 پنل کنترل مزرعه هوشمند</h1>
+            <p class="text-lg" id="mainSubtitle" style="color: var(--text-secondary)">نظارت و کنترل سیستم‌های مزرعه در زمان واقعی</p>
+        </header>
+
+        <!-- Action Bar -->
+        <div class="flex flex-wrap gap-4 mb-6 justify-center">
+            <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-medium control-button shadow-lg" onclick="fetchAllData()">
+                <span id="refreshBtn">🔄 بروزرسانی همه داده‌ها</span>
+            </button>
+            <button class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-medium control-button shadow-lg" onclick="toggleWeatherSettings()">
+                <span id="weatherSettingsBtn">⚙️ تنظیمات آب و هوا</span>
+            </button>
+            <button class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-xl font-medium control-button shadow-lg" onclick="toggleAllModules()">
+                <span id="toggleModulesBtn">📋 نمایش/مخفی کردن همه ماژول‌ها</span>
+            </button>
+        </div>
+
+        <!-- Alerts -->
+        <div id="alerts" class="mb-6"></div>
+
+        <!-- Weather Settings Panel -->
+        <div id="weatherSettings" class="glass-card p-6 rounded-xl shadow-xl mb-6 hidden">
+            <h3 class="text-xl font-semibold mb-4" id="weatherConfigTitle" style="color: var(--text-primary)">🌤️ پیکربندی API آب و هوا</h3>
+            <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2" id="apiKeyLabel" style="color: var(--text-secondary)">کلید RapidAPI</label>
+                    <input type="password" id="apiKeyInput" placeholder="کلید RapidAPI خود را وارد کنید" 
+                           class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2" id="locationLabel" style="color: var(--text-secondary)">موقعیت</label>
+                    <input type="text" id="locationInput" placeholder="نام شهر را وارد کنید" value="تهران"
+                           class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+            </div>
+            <div class="flex gap-3 mt-4">
+                <button onclick="saveApiKey()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg control-button">
+                    <span id="saveApiBtn">💾 ذخیره کلید API</span>
+                </button>
+                <button onclick="getWeather()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg control-button">
+                    <span id="getWeatherBtn">🌍 دریافت آب و هوا</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Dashboard Grid -->
+        <div class="grid lg:grid-cols-3 gap-6 mb-6">
+            <!-- System Status -->
+            <div class="lg:col-span-2">
+                <div id="systemStatus" class="glass-card p-6 rounded-xl shadow-xl">
+                    <h2 class="text-2xl font-semibold mb-4 flex items-center">
+                        <span class="status-indicator status-offline"></span>
+                        <span id="systemStatusTitle" style="color: var(--text-primary)">وضعیت سیستم</span>
+                    </h2>
+                    <div id="systemStatusLoading" style="color: var(--text-secondary)">در حال بارگذاری وضعیت سیستم...</div>
+                </div>
+            </div>
+
+            <!-- Weather Card -->
+            <div class="weather-card p-6 rounded-xl shadow-xl relative">
+                <h2 class="text-2xl font-semibold mb-4 relative z-10" id="weatherTitle">🌤️ آب و هوا</h2>
+                <div class="text-center relative z-10">
+                    <div id="weatherIcon" class="text-5xl mb-3">🌤️</div>
+                    <div id="currentTemp" class="text-4xl font-bold mb-2">--°C</div>
+                    <div id="weatherDesc" class="text-lg opacity-90 mb-4">در حال بارگذاری...</div>
+                </div>
+                
+                <div class="weather-details relative z-10">
+                    <div class="weather-detail-item">
+                        <div class="text-sm opacity-75" id="feelsLikeLabel">احساس دما</div>
+                        <div id="feelsLike" class="font-semibold">--°C</div>
+                    </div>
+                    <div class="weather-detail-item">
+                        <div class="text-sm opacity-75" id="humidityLabel">رطوبت</div>
+                        <div id="humidity" class="font-semibold">--%</div>
+                    </div>
+                    <div class="weather-detail-item">
+                        <div class="text-sm opacity-75" id="windLabel">باد</div>
+                        <div id="windSpeed" class="font-semibold">-- کیلومتر/ساعت</div>
+                    </div>
+                    <div class="weather-detail-item">
+                        <div class="text-sm opacity-75" id="uvLabel">شاخص UV</div>
+                        <div id="uvIndex" class="font-semibold">--</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weather Forecast -->
+        <div class="glass-card p-6 rounded-xl shadow-xl mb-6">
+            <h3 class="text-xl font-semibold mb-4" id="forecastTitle" style="color: var(--text-primary)">📅 پیش‌بینی ۵ روزه</h3>
+            <div id="forecastGrid" class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                <div class="loading-spinner"></div>
+            </div>
+        </div>
+
+        <!-- Farm Modules -->
+        <div id="modulesContainer" class="space-y-6"></div>
+    </div>
+
+    <script src="weather.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

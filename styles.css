@@ -1,0 +1,557 @@
+/* Font Family */
+* {
+    font-family: 'Vazirmatn', sans-serif;
+    box-sizing: border-box;
+}
+
+/* Farm-themed Color Variables */
+:root {
+    /* Farm-specific colors */
+    --farm-green-light: #a7f3d0; /* Brighter green for vibrancy */
+    --farm-green: #16a34a; /* Richer green */
+    --farm-green-dark: #15803d; /* Darker, more natural green */
+    --farm-brown-light: #e4c9a2; /* Softer, warmer brown */
+    --farm-brown: #7c3a0f; /* Deeper, more earthy brown */
+    --farm-brown-dark: #5a2e0b; /* Rich dark brown */
+    --farm-earth: #d2b48c; /* Slightly lighter for contrast */
+    --farm-soil: #7c6448; /* More natural soil tone */
+    --farm-grass: #65a30d; /* Vibrant grass green */
+    --farm-wheat: #f5c28a; /* Warmer wheat tone */
+
+    /* Light mode variables */
+    --bg-primary: #f7fafc; /* Slightly brighter background */
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #f9fafb;
+    --text-primary: #111827; /* Higher contrast black */
+    --text-secondary: #374151; /* Improved readability */
+    --text-tertiary: #6b7280;
+    --border-color: #d1d5db;
+    --shadow-color: rgba(0, 0, 0, 0.08);
+    --glass-bg: rgba(255, 255, 255, 0.92); /* More opaque for clarity */
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --status-bg: rgba(255, 255, 255, 0.88);
+    --control-bg: linear-gradient(135deg, #f9fafb, #e5e7eb);
+    --weather-overlay: rgba(255, 255, 255, 0.12);
+    --offline-overlay: rgba(239, 68, 68, 0.15);
+    --offline-text: #dc2626;
+    --hover-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+
+    /* Farm pattern */
+    --farm-pattern: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2316a34a' fill-opacity='0.04'%3E%3Cpath d='M20 20c0-7-5.6-12.6-12.6-12.6S-5.2 13 0 20s12.6 7 12.6 0zm0 0c0 7 5.6 12.6 12.6 12.6S45.2 27 40 20s-12.6-7-12.6 0z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+[data-theme="dark"] {
+    --bg-primary: #111827; /* Darker, richer background */
+    --bg-secondary: #1f2937;
+    --bg-tertiary: #374151;
+    --text-primary: #f3f4f6; /* Brighter for contrast */
+    --text-secondary: #d1d5db; /* Improved readability */
+    --text-tertiary: #9ca3af;
+    --border-color: #4b5563;
+    --shadow-color: rgba(0, 0, 0, 0.25);
+    --glass-bg: rgba(31, 41, 55, 0.92); /* More opaque */
+    --glass-border: rgba(148, 163, 184, 0.15);
+    --status-bg: rgba(31, 41, 55, 0.88);
+    --control-bg: linear-gradient(135deg, #374151, #4b5563);
+    --weather-overlay: rgba(148, 163, 184, 0.12);
+    --offline-overlay: rgba(239, 68, 68, 0.25);
+    --offline-text: #f87171;
+    --hover-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Base Styles */
+body {
+    background: var(--bg-primary) var(--farm-pattern);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    min-height: 100vh;
+    margin: 0;
+    font-size: 16px;
+}
+
+/* Farm Header */
+.farm-header {
+    background: linear-gradient(135deg, var(--farm-green), var(--farm-brown));
+    color: white;
+    padding: 1.5rem;
+    border-radius: 16px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 6px 24px rgba(22, 163, 74, 0.25);
+    position: relative;
+    overflow: hidden;
+}
+
+.farm-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cpath d='M15 15h8v8h-8zm16 0h8v8h-8zm16 0h8v8h-8z' fill='%23ffffff' opacity='0.08'/%3E%3C/svg%3E") repeat;
+    pointer-events: none;
+}
+
+/* Module Section */
+.module-section {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-left: 4px solid transparent;
+    background: var(--glass-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 4px 16px var(--shadow-color);
+    padding: 1rem;
+}
+
+.module-section.online {
+    border-left-color: var(--farm-green);
+    box-shadow: 0 4px 16px rgba(22, 163, 74, 0.15);
+}
+
+.module-section.offline {
+    border-left-color: #ef4444;
+    background: var(--glass-bg);
+    position: relative;
+}
+
+.module-section.offline::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--offline-overlay);
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+/* Utility Classes */
+.hidden {
+    display: none;
+}
+
+.alert {
+    transition: opacity 0.4s ease;
+}
+
+/* Weather Card */
+.weather-card {
+    background: linear-gradient(135deg, var(--farm-green), var(--farm-brown));
+    color: white;
+    position: relative;
+    border-radius: 16px;
+    box-shadow: 0 6px 24px rgba(22, 163, 74, 0.25);
+    padding: 1.5rem;
+    overflow: hidden;
+}
+
+.weather-card::before {
+    content: '🌾🌱';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 1.25rem;
+    opacity: 0.25;
+    pointer-events: none;
+    aria-hidden: true;
+}
+
+/* Forecast Item */
+.forecast-item {
+    background: var(--weather-overlay);
+    backdrop-filter: blur(8px);
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    transition: transform 0.3s ease, background 0.3s ease;
+    border: 1px solid rgba(22, 163, 74, 0.15);
+}
+
+.forecast-item:hover {
+    transform: translateY(-3px);
+    background: rgba(22, 163, 74, 0.2);
+    border-color: rgba(22, 163, 74, 0.3);
+}
+
+/* Status Indicator */
+.status-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 6px;
+    animation: pulse 1.8s ease-in-out infinite;
+}
+
+.status-online {
+    background-color: var(--farm-green);
+}
+
+.status-offline {
+    background-color: #ef4444;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    border: 3px solid var(--border-color);
+    border-top: 3px solid var(--farm-green);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    animation: spin 0.9s linear infinite;
+    margin: 1rem auto;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Control Button */
+.control-button {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 10px;
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+}
+
+.control-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: var(--hover-shadow);
+}
+
+.control-button:focus {
+    outline: 2px solid var(--farm-green);
+    outline-offset: 2px;
+}
+
+.control-button:active {
+    transform: translateY(0);
+}
+
+.control-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.btn-farm-primary {
+    background: linear-gradient(135deg, var(--farm-green), var(--farm-green-dark));
+    color: white;
+    border: none;
+}
+
+.btn-farm-primary:hover:not(:disabled) {
+    background: linear-gradient(135deg, var(--farm-green-dark), var(--farm-green));
+}
+
+.btn-farm-secondary {
+    background: linear-gradient(135deg, var(--farm-brown), var(--farm-brown-dark));
+    color: white;
+    border: none;
+}
+
+.btn-farm-secondary:hover:not(:disabled) {
+    background: linear-gradient(135deg, var(--farm-brown-dark), var(--farm-brown));
+}
+
+.btn-farm-danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    border: none;
+}
+
+.btn-farm-danger:hover:not(:disabled) {
+    background: linear-gradient(135deg, #dc2626, #ef4444);
+}
+
+/* Grid Layouts */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+}
+
+.weather-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+}
+
+.weather-detail-item {
+    background: var(--weather-overlay);
+    padding: 0.75rem;
+    border-radius: 10px;
+    text-align: center;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(22, 163, 74, 0.15);
+}
+
+/* Glass Card */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 6px 24px var(--shadow-color);
+    border-radius: 16px;
+    padding: 1rem;
+}
+
+/* Module Icon */
+.module-icon {
+    font-size: 1.75rem;
+    margin-left: 0.5rem;
+}
+
+/* Control Section */
+.control-section {
+    background: var(--control-bg);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+/* Status Card */
+.status-card {
+    background: var(--status-bg);
+    border-radius: 12px;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+.status-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--hover-shadow);
+    border-color: var(--farm-green);
+}
+
+/* Toggles */
+.lang-toggle,
+.theme-toggle {
+    position: fixed;
+    top: 1rem;
+    z-index: 1000;
+    background: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    border-radius: 40px;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: transform 0.3s ease, background 0.3s ease;
+    color: var(--text-primary);
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.lang-toggle {
+    left: 1rem;
+}
+
+.theme-toggle {
+    left: 7.5rem; /* Increased spacing from 6rem to 7.5rem */
+}
+
+.lang-toggle:hover,
+.theme-toggle:hover {
+    background: var(--bg-secondary);
+    transform: scale(1.03);
+    border-color: var(--farm-green);
+}
+
+/* Text Direction */
+.rtl {
+    direction: rtl;
+}
+
+.ltr {
+    direction: ltr;
+}
+
+/* Sensor Grid */
+.sensor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+}
+
+.sensor-item {
+    background: var(--status-bg);
+    padding: 0.75rem;
+    border-radius: 10px;
+    text-align: center;
+    border: 1px solid var(--border-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+.sensor-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--hover-shadow);
+    border-color: var(--farm-green);
+}
+
+/* Control Grid */
+.control-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+/* Offline Indicator */
+.offline-indicator {
+    background: var(--offline-overlay);
+    color: var(--offline-text);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 0.75rem;
+    text-align: center;
+    font-weight: 500;
+    border: 1px solid var(--offline-text);
+}
+
+.offline-controls {
+    opacity: 0.5;
+    pointer-events: none;
+    position: relative;
+}
+
+.offline-controls::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--offline-overlay);
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+/* Form Elements */
+input,
+select,
+textarea {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 0.5rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--farm-green);
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+    outline: none;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary); /* Matches background for cohesion */
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--farm-green-light), var(--farm-wheat)); /* Vibrant farm-themed gradient */
+    border-radius: 5px;
+    border: 2px solid var(--bg-secondary); /* Subtle border for polish */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, var(--farm-green), var(--farm-wheat)); /* Slightly darker on hover */
+}
+
+/* Alert Colors */
+.alert-green {
+    background: linear-gradient(135deg, #d1fae5, #a7f3d0); /* More vibrant green alert */
+    border: 1px solid var(--farm-green);
+    color: var(--farm-green-dark);
+    padding: 0.75rem;
+    border-radius: 10px;
+}
+
+.alert-brown {
+    background: linear-gradient(135deg, #fef3c7, #fcd34d); /* Brighter, more distinct brown */
+    border: 1px solid var(--farm-brown);
+    color: var(--farm-brown-dark);
+    padding: 0.75rem;
+    border-radius: 10px;
+}
+
+.alert-red {
+    background: linear-gradient(135deg, #fee2e2, #fecaca); /* Softer red for better readability */
+    border: 1px solid #ef4444;
+    color: #dc2626;
+    padding: 0.75rem;
+    border-radius: 10px;
+}
+
+/* Farm Decorative Elements */
+.farm-decoration {
+    position: absolute;
+    opacity: 0.08;
+    font-size: 2.5rem;
+    pointer-events: none;
+    aria-hidden: true;
+    animation: float 5s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+.farm-decoration:nth-child(1) {
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.farm-decoration:nth-child(2) {
+    top: 20%;
+    right: 15%;
+    animation-delay: 1.5s;
+}
+
+.farm-decoration:nth-child(3) {
+    bottom: 20%;
+    left: 20%;
+    animation-delay: 3s;
+}
+
+.farm-decoration:nth-child(4) {
+    bottom: 10%;
+    right: 10%;
+    animation-delay: 0.5s;
+}
+
+/* Accessibility: Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    .forecast-item,
+    .control-button,
+    .status-card,
+    .sensor-item,
+    .lang-toggle,
+    .theme-toggle,
+    .farm-decoration {
+        transition: none;
+        animation: none;
+    }
+
+    .loading-spinner {
+        animation: none;
+        border: 3px solid var(--farm-green);
+    }
+
+    .status-indicator {
+        animation: none;
+    }
+}
