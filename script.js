@@ -245,7 +245,7 @@ function updateUILanguage() {
     }
 }
 
-const API_BASE = '127.0.0.1/api';
+const API_BASE = 'http://127.0.0.1:8180/api';
 window.lastModulesData = null;
 
 // Enhanced fetch with better error handling
