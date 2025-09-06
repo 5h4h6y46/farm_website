@@ -245,7 +245,7 @@ function updateUILanguage() {
     }
 }
 
-const API_BASE = 'https://z36b8c50-8180.inc1.devtunnels.ms/api';
+const API_BASE = '127.0.0.1/api';
 window.lastModulesData = null;
 
 // Enhanced fetch with better error handling
